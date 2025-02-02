@@ -25,7 +25,7 @@ Task Manager es una extensión de Google Chrome diseñada para ayudarte a organi
 
 1. Descarga el repositorio:
    ```sh
-   git clone https://github.com/tu-usuario/task-manager-extension.git
+   git clone https://github.com/OriolLlovera/task-manager-extension.git
    ```
 2. Abre Google Chrome y ve a `chrome://extensions/`.
 3. Activa el "Modo Desarrollador" en la esquina superior derecha.
