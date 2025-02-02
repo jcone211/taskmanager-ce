@@ -131,38 +131,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleComplete = (task) => {
     const wasCompleted = task.completed;
     task.completed = !task.completed;
+    task.lastModified = Date.now();
     
-    // Actualizar lastModified solo si cambió el estado
-    if (task.completed !== wasCompleted) {
-      task.lastModified = Date.now();
-      
-      // Manejar alarmas
-      if (task.completed) {
-        if (countdownIntervals.has(task.id)) {
-          clearInterval(countdownIntervals.get(task.id));
-          countdownIntervals.delete(task.id);
-        }
+    if (task.completed) {
         chrome.runtime.sendMessage({ type: 'deleteAlarm', taskId: task.id });
-      } else {
+    } else {
         if (task.timer !== 'none') {
-          const [value, unit] = task.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
-          const timeUnits = { min: 60000, h: 3600000 };
-          task.dueDateTime = Date.now() + (value * timeUnits[unit]);
-          chrome.runtime.sendMessage({
-            type: 'createAlarm',
-            taskId: task.id,
-            dueTime: value * timeUnits[unit]
-          });
-          startCountdown(task);
+            const [value, unit] = task.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
+            const timeUnits = { min: 60000, h: 3600000 };
+            task.dueDateTime = Date.now() + (value * timeUnits[unit]);
+            
+            // 🔥 Usar el mismo sistema de alarmas
+            chrome.runtime.sendMessage({
+                type: 'createAlarm',
+                taskId: task.id,
+                dueTime: value * timeUnits[unit]
+            });
         }
-      }
     }
-  
+    
     saveTasks();
     renderTasks();
     updateStatistics();
-  };
-  
+};
 
   const editTask = (task) => {
     editingTask = task;
@@ -194,33 +185,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const startCountdown = (task) => {
     if (!task.dueDateTime || task.completed) return;
 
-    // Eliminar intervalos previos
+    // Limpiar intervalos anteriores
     if (countdownIntervals.has(task.id)) {
         clearInterval(countdownIntervals.get(task.id));
+        countdownIntervals.delete(task.id);
     }
 
     const update = () => {
         const now = Date.now();
         const timeLeft = task.dueDateTime - now;
         const countdownElement = document.getElementById(`countdown-${task.id}`);
-
+        
         if (timeLeft <= 0) {
             task.completed = true;
             saveTasks();
             renderTasks();
-
-            // 🔥 Crear alarma manualmente (FALTA ESTE PASO)
-            chrome.runtime.sendMessage({ 
-                type: 'createAlarm', 
+            
+            // 🔥 Crear alarma para disparar notificación
+            chrome.runtime.sendMessage({
+                type: 'createAlarm',
                 taskId: task.id,
                 dueTime: 0 // Disparar inmediatamente
             });
 
-            // Notificación y sonido
-            showNotification(task.name);
-            playAlertSound();
-
             clearInterval(countdownIntervals.get(task.id));
+            countdownIntervals.delete(task.id);
         } else {
             const hours = Math.floor(timeLeft / 3600000).toString().padStart(2, '0');
             const minutes = Math.floor((timeLeft % 3600000) / 60000).toString().padStart(2, '0');
@@ -326,38 +315,47 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.addTaskForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(elements.addTaskForm);
-    
     if (!formData.get('task-name')?.trim()) {
-      alert('El nombre es obligatorio');
-      return;
+        alert('El nombre es obligatorio');
+        return;
     }
-  
     const taskData = {
-      id: editingTask?.id || Date.now().toString(),
-      name: formData.get('task-name').trim(),
-      category: formData.get('task-category'),
-      dueDate: formData.get('task-due-date'),
-      description: formData.get('task-description'),
-      timer: formData.get('task-timer'),
-      dueDateTime: calculateDueDateTime(formData.get('task-timer')),
-      completed: editingTask?.completed || false,
-      creationDate: editingTask?.creationDate || Date.now(),
-      lastModified: editingTask ? Date.now() : null
+        id: editingTask?.id || Date.now().toString(),
+        name: formData.get('task-name').trim(),
+        category: formData.get('task-category'),
+        dueDate: formData.get('task-due-date'),
+        description: formData.get('task-description'),
+        timer: formData.get('task-timer'),
+        dueDateTime: calculateDueDateTime(formData.get('task-timer')),
+        completed: editingTask?.completed || false,
+        creationDate: editingTask?.creationDate || Date.now(),
+        lastModified: editingTask ? Date.now() : null
     };
-  
+
     if (editingTask) {
-      const index = tasks.findIndex(t => t.id === editingTask.id);
-      if (index !== -1) tasks[index] = taskData;
-      editingTask = null;
+        const index = tasks.findIndex(t => t.id === editingTask.id);
+        if (index !== -1) tasks[index] = taskData;
+        editingTask = null;
     } else {
-      tasks.push(taskData);
+        tasks.push(taskData);
+
+        // Crear alarma si hay un temporizador activo
+        if (taskData.timer && taskData.timer !== 'none') {
+            const [value, unit] = taskData.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
+            const timeUnits = { min: 60000, h: 3600000 };
+            chrome.runtime.sendMessage({
+                type: 'createAlarm',
+                taskId: taskData.id,
+                dueTime: value * timeUnits[unit]
+            });
+        }
     }
-  
+
     saveTasks();
     renderTasks();
     updateStatistics();
     toggleForm(false);
-  });
+});
 
   elements.filterWrapper.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -437,5 +435,11 @@ document.addEventListener('DOMContentLoaded', () => {
       playAlertSound();
     }
   });
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    new Audio(chrome.runtime.getURL('alert.mp3')).play().catch(console.error);
+  });
+
 
 });

@@ -16,8 +16,10 @@
      "type": "module"
   },
   "web_accessible_resources": [{
-    "resources": ["alert.mp3", "icon.png"],
+   "resources": ["alert.mp3", "icon.png" ,"offscreen.html",
+   "offscreen.js"],
     "matches": ["<all_urls>"]
+    
   }],
   "icons": {
     "128": "icon.png"
