@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Tareas</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Agregar Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  
+</head>
+<body>
+  <div class="main-container">
+    <div class="divtitle ">
+        <div class="keyboard">
+            <span class="key">T</span>
+            <span class="key">A</span>
+            <span class="key">S</span>
+            <span class="key">K &nbsp;</span>            
+            <span class="key">M</span>
+            <span class="key">A</span>
+            <span class="key">N</span>
+            <span class="key">A</span>
+            <span class="key">G</span>
+            <span class="key">E</span>
+            <span class="key">R</span>
+          </div>
+    </div>  
+  
+    
+    <div class="search-container">
+      <!-- Botón Añadir -->
+      <button id="form-icon">+</button>
+      
+      <!-- Campo de búsqueda -->
+      <input type="text" id="search-input" placeholder="Buscar tareas...">
+      
+      <!-- Contenedor de iconos derechos -->
+      <div class="actions-container">
+        <!-- Estadísticas -->
+        <div id="statistics">
+          <span class="stat-item"><i class="fas fa-fire urgent"></i><span id="urgent-count">0</span></span>
+          <span class="stat-item"><i class="fas fa-exclamation-circle high"></i><span id="high-count">0</span></span>
+          <span class="stat-item"><i class="fas fa-leaf low"></i><span id="low-count">0</span></span>
+        </div>
+    
+        <!-- Botón Calendario -->
+        <button id="calendar-icon" class="action-btn">
+          <i class="fas fa-calendar-alt"></i>
+        </button>
+    
+        <!-- Botón Filtros -->
+        <div class="filter-wrapper">
+          <button id="filter-icon" class="action-btn">
+            <i class="fas fa-filter"></i>
+          </button>
+          <!-- Menú desplegable -->
+          <div class="filter-dropdown">
+            <select id="filter-category">
+              <option value="">Todas las categorías</option>
+              <option value="urgente">Urgente</option>
+              <option value="alta">Alta</option>
+              <option value="baja">Baja</option>
+            </select>
+            
+            <select id="filter-status">
+              <option value="">Todos los estados</option>
+              <option value="completed">Completadas</option>
+              <option value="pending">Pendientes</option>
+            </select>
+    
+            <input type="date" id="filter-date">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+</div>
+
+  <!-- Formulario de añadir tarea -->
+  <form id="add-task-form">
+    <button type="button" id="close-form" class="close-btn">×</button>
+    <h2>Añadir Tarea</h2>
+    
+    <div class="form-group">
+      <label for="task-name">Nombre de la tarea</label>
+      <input type="text" id="task-name" name="task-name" placeholder="Revisar documentos" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="task-category">Prioridad</label>
+      <select id="task-category" name="task-category" required>
+        <option value="urgente">Urgente</option>
+        <option value="alta">Alta</option>
+        <option value="baja">Baja</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="task-due-date">Fecha límite</label>
+      <input type="date" id="task-due-date" name="task-due-date">
+    </div>
+    
+    <div class="form-group">
+      <label for="task-description">Descripción</label>
+      <textarea 
+        id="task-description" 
+        name="task-description" 
+        placeholder="Detalles de la tarea"
+        rows="3"
+      ></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="task-timer">Temporizador</label>
+      <select id="task-timer" name="task-timer">
+        <option value="none">Sin temporizador</option>
+        <option value="1min">1m</option>
+        <option value="20min">20m</option>
+        <option value="30min">30m</option>
+        <option value="1h">1h</option>
+        <option value="2h">2h</option>
+        <option value="3h">3h</option>
+      </select>
+    </div>
+    
+    <button type="submit" id="submit-form">Crear Tarea</button>
+  </form>
+  
+ 
+
+  <!-- Lista de tareas -->
+  <ul id="task-list"></ul>
+
+  <!-- Calendario modal -->
+  <div id="calendar-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <div class="calendar-header">
+        <button id="prev-month">&lt;</button>
+        <h3 id="current-month"></h3>
+        <button id="next-month">&gt;</button>
+      </div>
+      <div class="calendar-grid" id="calendar"></div>
+      <div id="task-details"></div>
+    </div>
+  </div> 
+</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

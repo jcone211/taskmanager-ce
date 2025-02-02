@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Task Manager",
+  "version": "1.0",
+  "permissions": [
+    "alarms",
+    "notifications",
+    "offscreen",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+     "type": "module"
+  },
+  "web_accessible_resources": [{
+    "resources": ["alert.mp3", "icon.png"],
+    "matches": ["<all_urls>"]
+  }],
+  "icons": {
+    "128": "icon.png"
+  }
+}

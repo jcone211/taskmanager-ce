@@ -1,0 +1,1588 @@
+:root {
+  --primary: #6366f1;
+  --secondary: #4f46e5;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --background: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tag {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+
+/* Establecemos la fuente global */ 
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  width: 600px;
+  height: 500px;
+  box-sizing: border-box;
+  color: #333;
+  
+  overflow-y: auto; /* Permite scroll si el contenido es largo */
+  padding-bottom: 30px; /* Espacio inferior */
+  min-height: 600px !important; /* Altura mínima suficiente */
+
+}
+
+/* Contenedor principal */
+h1 {
+  text-align: center;
+  margin: 20px 0;
+  color: #4a4a4a;
+}
+
+/* Estilo para el formulario */
+form {
+  background: #ffffff;
+  padding: 20px 25px;
+  max-width: 450px;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  font-weight: bold;
+  font-size: 10px;
+  margin-bottom: 8px;
+  display: block;
+  color: #4a4a4a;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+input:focus, select:focus {
+  border-color: #007bff;
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Botón añadir tarea */
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px; /* Mantener bordes redondeados */
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%; /* Asegura que el botón ocupe todo el ancho del formulario */
+  box-sizing: border-box; /* Asegura que el padding no afecte el tamaño */
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Filtro de búsqueda */
+#search-input {
+  width: 80%;
+  padding: 8px;
+  margin: 20px auto;
+  display: block;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+#search-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Lista de tareas */
+#task-list {
+  list-style-type: none;
+  padding: 0 15px; /* Espaciado lateral agregado */
+  margin: 15px 0; /* Espaciado superior e inferior ajustado */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  gap: 12px;
+}
+
+.task-item {
+  background: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+/* Estilo para las tareas completadas */
+.task-item.completed {
+  background: #f8f9fa !important;
+  border-left: 4px solid #6c757d !important;
+  opacity: 0.8; /* Estado final directamente */
+  transition: opacity 0.3s ease; /* Transición suave en lugar de animación */
+
+}
+
+.task-item.completed .task-name {
+  text-decoration: line-through; /* Sólo tacha el nombre de la tarea */
+}
+
+.task-item:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+  transform: scale(1.02);
+}
+
+.task-item.completed .complete-btn {
+  background-color: #6c757d; /* Mismo color gris que el texto */
+  cursor: default; /* Cambia el cursor para indicar que ya está completado */
+}
+
+.task-item.completed .complete-btn:hover {
+  background-color: #6c757d; /* Sin cambio de color al pasar el cursor */
+  transform: none; /* Sin efecto de escala */
+}
+
+
+/* Botones de acción en las tareas */
+.task-actions {
+  display: flex;
+  justify-content: flex-start; /* Asegura alineación a la izquierda */
+  gap: 8px; /* Espacio entre los botones */
+  flex-wrap: wrap; /* Permite que los botones se ajusten si no caben */
+}
+
+button {
+  padding: 8px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+}
+
+/* Estilo de los iconos */
+button i {
+  font-size: 16px;
+  color: white;
+}
+
+/* Botón completar */
+.complete-btn {
+  background-color: #28a745;
+}
+
+.complete-btn:hover {
+  background-color: #218838;
+}
+
+/* Botón eliminar */
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Botón editar */
+.edit-btn {
+  background-color: #ffc107;
+}
+
+.edit-btn:hover {
+  background-color: #e0a800;
+}
+
+/* Estadísticas */
+#statistics {
+  background-color: #fff;
+  padding: 15px;
+  margin-top: 30px;
+  max-width: 400px;
+  margin: 20px auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#statistics p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+#statistics span {
+  font-weight: bold;
+}
+
+#statistics span.red {
+  color: red;
+}
+
+#statistics span.orange {
+  color: orange;
+}
+
+#statistics span.green {
+  color: green;
+}
+
+
+
+.task-item {
+  animation: fadeIn 0.5s ease;
+}
+
+.task-item.completed {
+  background-color: #e0e0e0; /* Fondo gris para las tareas completadas */
+  color: #6c757d; /* Color de texto más tenue */
+}
+
+.task-item.completed .task-name {
+  text-decoration: line-through; /* Sólo tacha el nombre de la tarea */
+}
+
+.task-item .task-category {
+  font-weight: bold;
+  font-size: 18px; /* Aumentar el tamaño del texto de la categoría */
+  color: inherit; /* Hereda el color asignado por la clase */
+  text-align: right; /* Alinea a la derecha */
+  margin-bottom: 8px; /* Espacio inferior para separar del resto de los elementos */
+  display: block;
+}
+
+.task-item .task-actions{
+
+  display: flex;
+  justify-content: flex-start; /* Cambiado de flex-end a flex-start */
+  gap: 8px;
+}
+
+.task-item .task-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start; /* Alinea los elementos a la izquierda */
+
+}
+
+.task-item .task-name {
+  flex-grow: 1; /* Toma el espacio restante */
+}
+
+/* Esto asegura que el texto de la categoría aparezca encima de los botones */
+.task-item .task-content {
+  flex-direction: column; /* Cambia la dirección para colocar la categoría encima */
+  align-items: flex-start; /* Alinea la categoría y los botones a la derecha */
+}
+
+.task-item .task-category {
+  margin-bottom: 10px; /* Da espacio entre la categoría y los botones */
+}
+
+.task-item:not(.completed) .task-category.red {
+  color: red;
+}
+
+.task-item:not(.completed) .task-category.orange {
+  color: orange;
+}
+
+.task-item:not(.completed) .task-category.green {
+  color: green;
+}
+
+/* Alineación a la izquierda y tamaño grande para el nombre de la tarea */
+.task-name {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+}
+
+/* Descripción alineada a la izquierda y debajo del nombre */
+.task-description {
+  text-align: left;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.task-footer {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #666;
+  text-align: left;
+}
+
+.task-footer .task-date,
+.task-footer .task-time {
+  display: block;
+}
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  background: #fff;
+  padding: 8px 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container {
+ 
+  align-items: center;
+ 
+  background-color: #f1f1f1; /* Fondo opcional para el contenedor */
+  padding: 5px 10px; /* Ajuste de relleno */
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+}
+
+/* Botón de añadir */
+#form-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #007bff;
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+#form-icon:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+#search-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  border-radius: 30px;
+}
+
+#search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+
+
+
+.task-container { /* Contenedor principal de la tarea */
+  display: flex;
+  justify-content: flex-start; /* Alinea los elementos a la izquierda */
+}
+
+/* Contenedor de acciones derechas */
+.actions-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+  padding-left: 10px;
+}
+
+.actions-container::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 70%;
+  width: 1px;
+  background: #e4e6eb;
+}
+
+/* Botones de acción */
+.action-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: #f0f2f5;
+  color: #606770;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  background: #e4e6eb;
+  color: #007bff;
+  transform: scale(1.05);
+}
+
+/* Menú desplegable de filtros */
+.filter-wrapper {
+  position: relative;
+}
+
+.filter-dropdown {
+  position: absolute;
+  width: 200px; /* Ancho fijo */
+  right: 0;
+  top: 45px; /* Distancia del botón */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-dropdown.show {
+  display: flex;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Elementos del filtro */
+.filter-dropdown input,
+.filter-dropdown select {
+  width: 100% !important;
+  max-width: 100% !important;
+  font-size: 13px;
+  padding: 7px 10px;
+}
+
+/* Iconos de filtro y calendario con color */
+#filter-icon,
+#calendar-icon {
+  background: #4a90e2 !important; /* Azul moderno */
+  color: white !important;
+}
+
+#filter-icon:hover,
+#calendar-icon:hover {
+  background: #357abd !important;
+}
+
+#filter-icon i,
+#calendar-icon i {
+  color: white !important;
+}
+
+/* Ajuste para contenedor sin tareas */
+#task-list:empty + #add-task-form.show {
+  margin-top: 30px; /* Espacio cuando no hay tareas */
+  margin-bottom: 30px;
+}
+
+/* Asegurar z-index correcto */
+#add-task-form {
+  z-index: 1001; /* Por encima de otros elementos */
+}
+
+.filter-dropdown select,
+.filter-dropdown input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+  transition: all 0.3s;
+}
+
+.filter-dropdown select:focus,
+.filter-dropdown input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  outline: none;
+}
+
+/* Icono activo cuando el menú está abierto */
+.filter-wrapper.active .action-btn {
+  background: #007bff;
+  color: white;
+}
+
+
+
+
+/* Estilo titulo */
+
+.divtitle {
+  background-image: linear-gradient(to right top, #6286bb, #466cb1, #3151a5, #253495, #231182);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+  
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+}
+
+
+.key {
+  font-size: 6vw;
+  display: inline-block;
+  letter-spacing: -1vw;
+  transition: transform 0.2s;
+}
+
+
+
+@keyframes pressDown1 {
+  30%,
+  40%,
+  100% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes pressDown2 {
+  70%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes pressDown3 {
+  30%,
+  40%,
+  100% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes pressDown4 {
+  40%,
+  50%,
+  100% {
+    transform: translateY(0);
+  }
+  45% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes pressDown5 {
+  20%,
+  30%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes pressDown6 {
+  60%,
+  70%,
+  100% {
+    transform: translateY(0);
+  }
+  65% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes pressDown7 {
+  10%,
+  20%,
+  100% {
+    transform: translateY(0);
+  }
+  15% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes pressDown8 {
+  35%,
+  45%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(10px);
+  }
+}
+
+
+
+.key:nth-child(1) {
+  animation: pressDown1 2s infinite;
+}
+
+.key:nth-child(2) {
+  animation: pressDown2 3s infinite;
+}
+
+.key:nth-child(3) {
+  animation: pressDown3 4s infinite;
+}
+
+.key:nth-child(4) {
+  animation: pressDown4 2.5s infinite;
+}
+
+.key:nth-child(5) {
+  animation: pressDown5 2.5s infinite;
+}
+
+.key:nth-child(6) {
+  animation: pressDown6 3.5s infinite;
+}
+
+.key:nth-child(7) {
+  animation: pressDown7 2.2s infinite;
+}
+
+.key:nth-child(8) {
+  animation: pressDown8 3.2s infinite;
+}
+
+.key:nth-child(11) {
+  animation: pressDown8 2s infinite;
+}
+
+/*Colores label categoria*/
+/* Estilo base para la etiqueta */
+.label {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-left: auto;
+}
+
+/* Colores según la categoría */
+.task-name.urgente{
+  background-color: #ff4d4d; /* Rojo para "urgente" */
+  color: white;
+}
+
+.label.warning {
+  background-color: #ffa500; /* Naranja para "alta" */
+  color: white;
+}
+
+.label.info {
+  background-color: #17a2b8; /* Azul claro para "media" */
+  color: white;
+}
+
+.label.success {
+  background-color: #28a745; /* Verde para "baja" */
+  color: white;
+}
+
+/* Estilo para categorías no reconocida */
+.label {
+  background-color: #cccccc; /* Gris como predeterminado */
+  color: black;
+}
+
+/* Estilo div titulo y label */
+
+.task-header {
+  display: flex;
+  justify-content: space-between; /* Asegura separación máxima entre elementos */
+  align-items: center; /* Alinea verticalmente */
+  width: 100%; /* Ocupa todo el ancho disponible */
+  box-sizing: border-box; /* Incluye padding y bordes en el ancho */
+}
+
+.task-name {
+  font-size: 18px;
+  margin: 0;
+}
+
+
+/* Estilos para tareas completadas */
+.task-item.completed {
+  background: #f8f9fa !important;
+  border-left: 4px solid #6c757d !important;
+  opacity: 0.8;
+}
+
+.task-item.completed .task-name {
+  color: #6c757d !important;
+  text-decoration: line-through;
+}
+
+.task-item.completed .label {
+  opacity: 0.6;
+}
+
+.task-item.completed .task-actions button {
+  opacity: 0.8;
+}
+
+.task-item.completed .complete-btn {
+  background-color: #6c757d !important;
+}
+
+.task-item.completed .complete-btn:hover {
+  opacity: 1;
+}
+
+
+
+#add-task-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);  
+  padding: 25px;
+  box-sizing: border-box; /* Incluye padding en el ancho */
+  z-index: 1000;
+  display: none;  
+  max-width: 360px;
+  width: 95%;  
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  margin-bottom: 100px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+#add-task-form .form-group {
+  margin-bottom: 15px;
+}
+
+#add-task-form.show {
+  display: block;
+}
+
+#add-task-form h2 {
+  margin: 0 0 20px 0;
+  font-size: 1.5rem;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+#add-task-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: #404040;
+  font-weight: 500;
+}
+
+#add-task-form input,
+#add-task-form select {
+  width: 100%;
+  max-width: 100%; /* Evita desbordamiento */
+  box-sizing: border-box; /* Incluye padding en el ancho */
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+#add-task-form input:focus,
+#add-task-form select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  outline: none;
+  background: white;
+}
+
+#submit-form {
+  width: 100%;
+  padding: 12px 0; /* Espaciado vertical igual arriba y abajo */
+  margin-top: 15px; /* Separación del textarea */
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s;
+}
+
+#submit-form:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+#close-form {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #666;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+
+#close-form:hover {
+  color: #333;
+}
+
+/* Estilos para el botón "+" */
+.custom-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.custom-button:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+/* Reglas para el temporizador */
+.task-timer {
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.countdown {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.countdown.red {
+  color: #dc3545;
+}
+
+.task-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.task-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: #666;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem top 50%;
+  background-size: 0.65rem auto;
+  padding-right: 2.5rem;
+}
+
+select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Añade estas reglas al final de tu CSS */
+.task-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ff4444;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: none;
+}
+
+.task-alert.show {
+  display: block;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.filters select, .filters input {
+  width: 90%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
+.task-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 10px;
+}
+
+.task-due-date {
+  color: #dc3546de;
+  font-weight: bold;
+}
+
+.task-modified {
+  color: #6c757d;
+  font-style: italic;
+}
+
+
+
+.task-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  order: 1; /* Posición de la categoría */
+}
+
+.task-name {
+  order: 1; /* Posición del nombre */
+}
+
+/* Posicionamiento del calendario */
+#calendar-icon {
+  position: static; /* Elimina el posicionamiento fijo */
+  margin-left: 8px;
+}
+
+/* Ajuste del modal del calendario */
+#calendar-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 1000;
+}
+
+#calendar-modal.show {
+  display: block;
+}
+
+.modal-content {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 20px;
+  border-radius: 12px;
+}
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  position: relative;
+}
+
+.calendar-day.has-tasks::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background: #dc3545;
+  border-radius: 50%;
+}
+
+
+
+
+/*Estilos para tareas completadas en el calendario */
+.task-detail.completed {
+  opacity: 0.7;
+}
+
+.task-detail.completed strong {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.task-detail.completed .label {
+  opacity: 0.6;
+}
+
+/* styles.css - Estilos para la lista de tareas en el calendario */
+#task-details {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#task-details h4 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.task-item {
+  padding: 10px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.task-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-name {
+  font-size: 14px;
+  color: #333;
+}
+
+.task-description {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.task-item.completed .task-name {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.task-item.completed .label {
+  opacity: 0.6;
+}
+
+/*Mejoras visuales para el calendario */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.calendar-day {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  background: white;
+  transition: background 0.2s ease;
+}
+
+.calendar-day:hover {
+  background: #f1f1f1;
+}
+
+.calendar-day.has-tasks {
+  background: #e3f2fd;
+  border-color: #90caf9;
+}
+
+.calendar-day.has-tasks:hover {
+  background: #bbdefb;
+}
+
+.calendar-day.header {
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: default;
+}
+
+.calendar-day.header:hover {
+  background: #007bff;
+}
+
+/* Añadir scroll Calendario */
+#task-details {
+  max-height: 200px; /* Altura máxima */
+  overflow-y: auto; /* Scroll vertical */
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+/*Mensaje de días vacíos */
+.no-tasks {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 10px;
+}
+
+/* Estilos para el botón de cierre del formulario */
+#close-form {
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 10px;
+  cursor: pointer;
+  color: #000000d1;
+  padding: 0 5px;
+  transition: transform 0.2s;
+}
+
+#close-form:hover {
+  transform: scale(1.2);
+  color: #f9f9f90e;
+}
+
+/* Estilos + abrir form */
+#add-task-form {
+  display: none;
+}
+
+#add-task-form.show {
+  display: block !important; /* Forzar visibilidad */
+}
+
+/* Estilos para el botón personalizado */
+.custom-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s, background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-button:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+/* Nuevos estilos para la disposición */
+.task-footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.task-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.85em;
+  color: #666;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  position: relative;
+  z-index: 1; /* Asegura que estén por encima del calendario */
+}
+
+/* Ajustes para responsividad */
+@media (max-width: 480px) {
+  .task-footer-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .task-actions {
+    align-self: flex-end;
+  }
+}
+
+/* Mantener alineación de elementos temporales */
+.task-timer {
+  margin-top: 10px;
+  font-size: 0.85em;
+  color: #666;
+}
+
+/* Estilos para el header */
+.task-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  width: 100%;
+  gap: 15px;
+}
+
+.task-name {
+  font-size: 1.1rem;
+  margin: 0;
+  flex-grow: 1;
+  max-width: 70%;
+  word-break: break-word;
+}
+
+.label {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 15px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Responsive para móviles */
+@media (max-width: 480px) {
+  .task-header-container {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .task-name {
+    max-width: 100%;
+    order: 1;
+  }
+  
+  .label {
+    order: 2;
+    margin-left: 0;
+  }
+}
+
+/* Estadísticas */
+#statistics {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-right: 10px;
+  background: #f8f9fa;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.stat-item i {
+  font-size: 16px;
+}
+
+.urgent { color: #dc3545; }
+.high { color: #ffc107; }
+.low { color: #28a745; }
+
+#urgent-count { color: #dc3545; }
+#high-count { color: #ffc107; }
+#low-count { color: #28a745; }
+
+
+
+/* Ajuste para calendario */
+#filter-date {
+  max-width: 100%;
+  font-size: 13px;
+}
+
+/* Mejora en la visualización del formulario */
+#add-task-form.show {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: formSlide 0.3s ease-out;
+}
+
+@keyframes formSlide {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+
+.filter-dropdown input[type="date"] {
+  max-width: 100%;
+  font-size: 14px;
+  padding: 8px 12px !important;
+  width: calc(100% - 33,6px) !important;
+  box-sizing: border-box;
+}
+
+/* Colores de categorías */
+.label.danger { background: #ff4444; color: white; }
+.label.warning { background: #ffbb33; color: black; }
+.label.success { background: #00C851; color: white; }
+
+/* Colores del calendario */
+.calendar-day.has-tasks { 
+  background: #e3f2fd !important;
+  position: relative;
+}
+.calendar-day.danger { box-shadow: inset 0 -3px 0 #ff4444; }
+.calendar-day.warning { box-shadow: inset 0 -3px 0 #ffbb33; }
+.calendar-day.success { box-shadow: inset 0 -3px 0 #00C851; }
+
+
+
+/* Título del calendario */
+#current-month {
+  text-align: left !important;
+  padding-left: 15px;
+  font-size: 1.2em;
+}
+
+/* Etiquetas de categoría */
+.label {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-weight: bold;
+  margin-left: 8px;
+  font-size: 0.85em;
+}
+
+.label.danger { background: #dc3545; color: white; }
+.label.warning { background: #ffc107; color: black; }
+.label.success { background: #28a745; color: white; }
+
+/* Contador de tareas en días */
+.calendar-day.has-tasks::after {
+  content: attr(data-task-count);
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #007bff;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Flechas de navegación */
+#prev-month, #next-month {
+  background: #2196F3;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-width: 1px;
+    border-style: solid;
+    border-color: rgb(221, 221, 221);
+    border-image: initial;
+    border-radius: 6px;
+}
+
+#prev-month:hover, #next-month:hover {
+  background: #1269b0;
+}
+
+/* Cabecera de días de la semana */
+.calendar-day-header {
+  background: #2196F3;
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+  border-width: 1px;
+    border-style: solid;
+    border-color: rgb(221, 221, 221);
+    border-image: initial;
+    border-radius: 6px;
+}
+
+/* Días con tareas */
+.calendar-day.has-tasks {
+  background: #FFF3E0;
+  position: relative;
+}
+
+/* Contador de tareas */
+.calendar-day.has-tasks::after {
+  content: attr(data-task-count);
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #FF5722;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Asegurar que todos los inputs y textarea tengan el mismo ancho */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box; /* Incluir padding en el ancho */
+}
+
+/* Textarea personalizado */
+#task-description {
+  width: 100%;
+  padding: 8px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* Permite redimensionar verticalmente */
+  min-height: 20px;
+  font-family: inherit;
+}
+
+/* Estilos específicos para los detalles de tareas en el calendario */
+#task-details {
+  text-align: left !important;
+}
+
+.task-detail1 {
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Contenedor flex para título y categoría */
+.task-detail1 .task-header1 {
+  display: flex;
+  justify-content: space-between; /* Separa elementos a los extremos */
+  align-items: center; /* Centra verticalmente */
+  margin-bottom: 8px;
+}
+
+.task-detail1 h4 {
+  margin: 0;
+  font-size: 1.1em;
+  color: #2c3e50;
+  flex-grow: 1; /* Ocupa el espacio disponible */
+}
+
+.task-detail1 .label {
+  margin-left: 15px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.9em;
+  white-space: nowrap; /* Evita salto de línea */
+}
+
+/* Colores de categorías */
+.label.danger { background: #ff4444; color: white; }
+.label.warning { background: #ffbb33; color: white; }
+.label.success { background: #00C851; color: white; }
