@@ -93,7 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="task-meta">
         <span class="task-date"><i class="fas fa-calendar"></i> ${new Date(task.creationDate).toLocaleDateString('es-ES')}</span>
         ${task.dueDate ? `<span class="task-due-date"><i class="fas fa-clock"></i> ${new Date(task.dueDate).toLocaleDateString('es-ES')}</span>` : ''}
-        ${task.lastModified ? `<span class="task-modified"><i class="fas fa-edit"></i> ${new Date(task.lastModified).toLocaleDateString('es-ES')}</span>` : ''}
+        ${task.lastModified ? `
+          <span class="task-modified">
+            <i class="fas fa-edit"></i> 
+            ${new Date(task.lastModified).toLocaleDateString('es-ES')}
+          </span>` : ''}
         ${task.timer !== 'none' ? `<div class="task-timer"><i class="fas fa-hourglass"></i> <span class="countdown" id="countdown-${task.id}"></span></div>` : ''}
       </div>
       <div class="task-actions">
@@ -125,29 +129,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveTasks = () => chrome.storage.local.set({ tasks });
 
   const toggleComplete = (task) => {
+    const wasCompleted = task.completed;
     task.completed = !task.completed;
-    task.lastModified = Date.now();
     
-    if (!task.completed && task.timer !== 'none') {
-      // Restaurar el tiempo original del temporizador
-      const [value, unit] = task.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
-      const timeUnits = { min: 60000, h: 3600000 };
-      task.dueDateTime = Date.now() + (value * timeUnits[unit]);
+    // Actualizar lastModified solo si cambió el estado
+    if (task.completed !== wasCompleted) {
+      task.lastModified = Date.now();
       
-      chrome.runtime.sendMessage({
-        type: 'createAlarm',
-        taskId: task.id,
-        dueTime: value * timeUnits[unit]
-      });
-      startCountdown(task);
-    } else {
-      chrome.runtime.sendMessage({ type: 'deleteAlarm', taskId: task.id });
+      // Manejar alarmas
+      if (task.completed) {
+        if (countdownIntervals.has(task.id)) {
+          clearInterval(countdownIntervals.get(task.id));
+          countdownIntervals.delete(task.id);
+        }
+        chrome.runtime.sendMessage({ type: 'deleteAlarm', taskId: task.id });
+      } else {
+        if (task.timer !== 'none') {
+          const [value, unit] = task.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
+          const timeUnits = { min: 60000, h: 3600000 };
+          task.dueDateTime = Date.now() + (value * timeUnits[unit]);
+          chrome.runtime.sendMessage({
+            type: 'createAlarm',
+            taskId: task.id,
+            dueTime: value * timeUnits[unit]
+          });
+          startCountdown(task);
+        }
+      }
     }
-    
+  
     saveTasks();
     renderTasks();
     updateStatistics();
   };
+  
 
   const editTask = (task) => {
     editingTask = task;
@@ -316,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('El nombre es obligatorio');
       return;
     }
-
+  
     const taskData = {
       id: editingTask?.id || Date.now().toString(),
       name: formData.get('task-name').trim(),
@@ -327,25 +342,17 @@ document.addEventListener('DOMContentLoaded', () => {
       dueDateTime: calculateDueDateTime(formData.get('task-timer')),
       completed: editingTask?.completed || false,
       creationDate: editingTask?.creationDate || Date.now(),
-      lastModified: Date.now()
+      lastModified: editingTask ? Date.now() : null
     };
-
+  
     if (editingTask) {
       const index = tasks.findIndex(t => t.id === editingTask.id);
       if (index !== -1) tasks[index] = taskData;
+      editingTask = null;
     } else {
       tasks.push(taskData);
     }
-
-    if (taskData.timer !== 'none') {
-      // Crear alarma solo si hay temporizador
-      chrome.runtime.sendMessage({
-          type: 'createAlarm',
-          taskId: taskData.id,
-          dueTime: taskData.dueDateTime - Date.now() // Tiempo restante
-      });
-  }
-
+  
     saveTasks();
     renderTasks();
     updateStatistics();
