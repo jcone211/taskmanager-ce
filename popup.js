@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.runtime.sendMessage({ type: 'playSound' });
   };
   
-  const showNotification = (taskName) => {
+  /*const showNotification = (taskName) => {
     chrome.runtime.sendMessage({
       type: 'showNotification',
       title: '¡Tiempo agotado!',
       message: `La tarea "${taskName}" ha expirado`
     });
-  };
+  };*/
 
   const getCategoryClass = (category) => {
     return {
@@ -132,24 +132,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const wasCompleted = task.completed;
     task.completed = !task.completed;
     task.lastModified = Date.now();
-    
+
     if (task.completed) {
+        // Eliminar la alarma
         chrome.runtime.sendMessage({ type: 'deleteAlarm', taskId: task.id });
+
+        // Detener el temporizador
+        if (countdownIntervals.has(task.id)) {
+            clearInterval(countdownIntervals.get(task.id));
+            countdownIntervals.delete(task.id);
+        }
     } else {
         if (task.timer !== 'none') {
             const [value, unit] = task.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
             const timeUnits = { min: 60000, h: 3600000 };
             task.dueDateTime = Date.now() + (value * timeUnits[unit]);
-            
-            // 🔥 Usar el mismo sistema de alarmas
+
+            // Crear nueva alarma
             chrome.runtime.sendMessage({
                 type: 'createAlarm',
                 taskId: task.id,
                 dueTime: value * timeUnits[unit]
             });
+
+            // Reiniciar el temporizador
+            startCountdown(task);
         }
     }
-    
+
     saveTasks();
     renderTasks();
     updateStatistics();
@@ -429,17 +439,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.type === 'alarmTriggered') {
-      renderTasks();
-      updateStatistics();
-      showNotification(message.taskName);
-      playAlertSound();
+        // Actualizar el estado de la tarea
+        tasks = tasks.map(task => 
+            task.id === message.taskName ? { ...task, completed: true } : task
+        );
+
+        saveTasks(); // Guardar los cambios
+        renderTasks();
+        updateStatistics();
+        //showNotification(message.taskName);
+        playAlertSound();
+
+        // Eliminar la alarma
+        chrome.runtime.sendMessage({
+            type: 'deleteAlarm',
+            taskId: message.taskName
+        });
     }
-  });
+});
 
 
-  document.addEventListener('DOMContentLoaded', () => {
-    new Audio(chrome.runtime.getURL('alert.mp3')).play().catch(console.error);
-  });
 
 
 });

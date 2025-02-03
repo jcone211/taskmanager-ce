@@ -27,12 +27,22 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 
     // Obtener las tareas almacenadas localmente
     const { tasks = [] } = await chrome.storage.local.get('tasks');
-    const task = tasks.find(t => t.id === alarm.name);
+    const taskIndex = tasks.findIndex(t => t.id === alarm.name);
 
-    if (!task) {
+    if (taskIndex === -1) {
         console.warn(`No se encontró ninguna tarea con ID ${alarm.name}`);
         return;
     }
+
+    const task = tasks[taskIndex];
+    if (!task || !task.name) {
+        console.error('La tarea o su nombre no están definidos:', task);
+        return;
+    }
+
+    // Marcar la tarea como completada
+    tasks[taskIndex].completed = true;
+    await chrome.storage.local.set({ tasks });
 
     // Crear notificación
     chrome.notifications.create(alarm.name, {
@@ -51,29 +61,26 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
         type: 'alarmTriggered',
         taskName: task.name
     });
+
+    // Eliminar la alarma después de que termine
+    chrome.alarms.clear(alarm.name);
 });
 
 // Manejar mensajes enviados desde el popup o content scripts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (!message || typeof message !== 'object') {
+        console.error('Mensaje no válido:', message);
+        return;
+    }
+
     if (message.type === 'createAlarm') {
-        // Crear alarma para una tarea
         const { taskId, dueTime } = message;
         if (dueTime > 0) {
             chrome.alarms.create(taskId, { delayInMinutes: dueTime / 60000 });
             console.log(`Alarma creada para la tarea con ID ${taskId}`);
-        } else {
-            console.warn(`El tiempo de vencimiento es inválido para la tarea con ID ${taskId}`);
         }
     } else if (message.type === 'deleteAlarm') {
-        // Eliminar alarma para una tarea
-        const { taskId } = message;
-        chrome.alarms.clear(taskId, () => {
-            if (chrome.runtime.lastError) {
-                console.error(`Error al eliminar la alarma para la tarea con ID ${taskId}:`, chrome.runtime.lastError);
-            } else {
-                console.log(`Alarma eliminada para la tarea con ID ${taskId}`);
-            }
-        });
+        chrome.alarms.clear(message.taskId);
     } else if (message.type === 'playSound') {
         // Reproducir sonido directamente desde el background script
         const audio = new Audio(chrome.runtime.getURL('alert.mp3'));
@@ -82,12 +89,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         });
     } else if (message.type === 'showNotification') {
         // Mostrar notificación personalizada
-        const { title, message } = message;
+        const { title, message: notificationMessage } = message;
+        if (!title || !notificationMessage) {
+            console.error('Título o mensaje de notificación no definidos:', message);
+            return;
+        }
         chrome.notifications.create(null, {
             type: 'basic',
             iconUrl: 'icon.png',
             title: title,
-            message: message,
+            message: notificationMessage,
             priority: 2
         });
     }
