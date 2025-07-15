@@ -1,8 +1,10 @@
 # 任务清单 Chrome 扩展
 
-**简体中文 | [English](README.md)**
+**[English](README.md) | 简体中文**
 
 原作者：[Oriol Llovera](https://github.com/OriolLlovera/)
+原项目: [OriolLlovera/taskmanager-ce](https://github.com/OriolLlovera/taskmanager-ce.git)
+
 ![icon](https://github.com/user-attachments/assets/3c86f31d-1183-470e-b280-409472668bb4)
 
 ## 📌 描述
@@ -16,19 +18,11 @@
 - 🎨 简单易用的界面.
 - 🌙 任务日历.
 
-### 扩展页面:
-
-![image](https://github.com/user-attachments/assets/0458ad4c-b659-4305-a5eb-50aa7f8f72ad)
-
-### 查看日历中的任务:
-
-![image](https://github.com/user-attachments/assets/324d35a4-2629-4402-bf79-2069bca3f46b)
-
 ## 🛠 安装
 
 1. 下载软件:
    ```sh
-   [git clone https://github.com/OriolLlovera/taskmanager-ce.git](https://github.com/jcone211/taskmanager-ce.git)
+   git clone https://github.com/jcone211/taskmanager-ce.git
    ```
 2. 打开 Google Chrome 浏览器 `chrome://extensions/`.
 3. 激活右上角的 "开发者模式.
