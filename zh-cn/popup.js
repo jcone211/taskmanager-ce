@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     addTaskForm: document.getElementById('add-task-form'),
     formIcon: document.getElementById('form-icon'),
     closeForm: document.getElementById('close-form'),
+    taskTimer: document.getElementById('task-timer'),
+    customTimerDiv: document.getElementById('customTimerDiv'),
+    customTimer: document.getElementById('task-custom-timer'),
     submitForm: document.getElementById('submit-form'),
     searchInput: document.getElementById('search-input'),
     taskList: document.getElementById('task-list'),
@@ -50,6 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }[category?.toLowerCase()] || '';
   };
 
+  const categoryEnum = {
+    'urgente': '紧急',
+    'alta': '高优先',
+    'baja': '低优先'
+  };
 
   const toggleForm = (isEditing = false) => {
     elements.addTaskForm.classList.toggle('show');
@@ -68,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form['task-due-date'].value = task.dueDate || '';
     form['task-description'].value = task.description || '';
     form['task-timer'].value = task.timer || 'none';
+    form['task-custom-timer'].value = task.customTimer || '';
   };
 
   const calculateDueDateTime = (timer) => {
@@ -86,14 +95,14 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="task-content">
     <div class="task-header-container">
       <h3 class="task-name">${task.name}</h3>
-      <span class="label ${getCategoryClass(task.category)}">${task.category}</span>
+      <span class="label ${getCategoryClass(task.category)}">${categoryEnum[task.category]}</span>
     </div>
     ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
     <div class="task-footer-container">
       <div class="task-meta">
         <span class="task-date"><i class="fas fa-calendar"></i> ${new Date(task.creationDate).toLocaleDateString('es-ES')}</span>
         ${task.dueDate ? `<span class="task-due-date"><i class="fas fa-clock"></i> ${new Date(task.dueDate).toLocaleDateString('es-ES')}</span>` : ''}
-        ${task.lastModified ? `
+        ${false ? `
           <span class="task-modified">
             <i class="fas fa-edit"></i> 
             ${new Date(task.lastModified).toLocaleDateString('zh-CN')}
@@ -131,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleComplete = (task) => {
     const wasCompleted = task.completed;
     task.completed = !task.completed;
-    task.lastModified = Date.now();
+    // task.lastModified = Date.now();
 
     if (task.completed) {
       // Eliminar la alarma
@@ -143,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         countdownIntervals.delete(task.id);
       }
     } else {
-      if (task.timer !== 'none') {
+      if (task.timer !== 'none' && task.timer !== 'custom') {
         const [value, unit] = task.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
         const timeUnits = { min: 60000, h: 3600000 };
         task.dueDateTime = Date.now() + (value * timeUnits[unit]);
@@ -303,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="task-detail1 ${task.completed ? 'completed' : ''}">
         <div class="task-header1">
           <h4>${task.name}</h4>
-          <span class="label ${getCategoryClass(task.category)}">${task.category}</span>
+          <span class="label ${getCategoryClass(task.category)}">${categoryEnum[task.category]}</span>
         </div>
         ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
         <div class="task-meta">
@@ -336,10 +345,12 @@ document.addEventListener('DOMContentLoaded', () => {
       dueDate: formData.get('task-due-date'),
       description: formData.get('task-description'),
       timer: formData.get('task-timer'),
+      customTimer: formData.get('task-custom-timer'),
       dueDateTime: calculateDueDateTime(formData.get('task-timer')),
       completed: editingTask?.completed || false,
       creationDate: editingTask?.creationDate || Date.now(),
-      lastModified: editingTask ? Date.now() : null
+      lastModified: null,
+      // lastModified: editingTask ? Date.now() : null
     };
 
     if (editingTask) {
@@ -351,12 +362,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Crear alarma si hay un temporizador activo
       if (taskData.timer && taskData.timer !== 'none') {
-        const [value, unit] = taskData.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
-        const timeUnits = { min: 60000, h: 3600000 };
+        let dueTimestamp;
+        if (taskData.timer === 'custom') {
+          if (taskData.customTimer) {
+            const [hours, minutes, seconds] = taskData.customTimer.split(':').map(Number);
+            const totalMilliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
+            const now = new Date();
+            taskData.dueDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() + totalMilliseconds;
+            dueTimestamp = taskData.dueDateTime - now;
+          } else {
+            alert('自定义时间未填写');
+            return;
+          }
+        } else {
+          const [value, unit] = taskData.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
+          const timeUnits = { min: 60000, h: 3600000 };
+          dueTimestamp = value * timeUnits[unit];
+        }
         chrome.runtime.sendMessage({
           type: 'createAlarm',
           taskId: taskData.id,
-          dueTime: value * timeUnits[unit]
+          dueTime: dueTimestamp
         });
       }
     }
@@ -365,6 +391,17 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTasks();
     updateStatistics();
     toggleForm(false);
+  });
+
+  //监听定时器值改变事件，弹出自定义时间选择
+  elements.taskTimer.addEventListener('change', (e) => {
+    if (e.target.value === 'custom') {
+      elements.customTimer.setAttribute('required', '');
+      elements.customTimerDiv.classList.remove('hide');
+    } else {
+      elements.customTimer.removeAttribute('required');
+      elements.customTimerDiv.classList.add('hide');
+    }
   });
 
   elements.filterWrapper.addEventListener('click', (e) => {

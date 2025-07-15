@@ -82,7 +82,7 @@
 
   <!-- 添加任务表单 -->
   <form id="add-task-form">
-    <button type="button" id="close-form" class="close-btn">×</button>
+    <button type="button" id="close-form" class="close-btn">x</button>
     <h2>添加任务</h2>
 
     <div class="form-group">
@@ -113,6 +113,7 @@
       <label for="task-timer">计时器</label>
       <select id="task-timer" name="task-timer">
         <option value="none">无计时器</option>
+        <option value="custom">自定义(定点)</option>
         <option value="1min">1分钟</option>
         <option value="20min">20分钟</option>
         <option value="30min">30分钟</option>
@@ -120,6 +121,11 @@
         <option value="2h">2小时</option>
         <option value="3h">3小时</option>
       </select>
+    </div>
+
+    <div class="form-group hide" id="customTimerDiv">
+      <label for="task-custom-timer">自定义时间</label>
+      <input type="time" id="task-custom-timer" name="task-custom-timer" step="2">
     </div>
 
     <button type="submit" id="submit-form">创建任务</button>

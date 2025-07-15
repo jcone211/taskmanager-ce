@@ -1,26 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "Task Manager",
+  "name": "任务清单",
   "version": "1.0",
-  "permissions": [
-    "alarms",
-    "notifications",
-    "offscreen",
-    "storage"
-  ],
+  "permissions": ["alarms", "notifications", "offscreen", "storage"],
   "action": {
     "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js",
-     "type": "module"
+    "type": "module"
   },
-  "web_accessible_resources": [{
-   "resources": ["alert.mp3", "icon.png" ,"offscreen.html",
-   "offscreen.js"],
-    "matches": ["<all_urls>"]
-    
-  }],
+  "web_accessible_resources": [
+    {
+      "resources": ["alert.mp3", "icon.png", "offscreen.html", "offscreen.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "icons": {
     "128": "icon.png"
   }

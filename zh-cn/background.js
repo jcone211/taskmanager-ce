@@ -44,12 +44,12 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     tasks[taskIndex].completed = true;
     await chrome.storage.local.set({ tasks });
 
-    // Crear notificación
+    // 创建通知
     chrome.notifications.create(alarm.name, {
         type: 'basic',
         iconUrl: 'icon.png',
-        title: '⏰ Tiempo agotado',
-        message: `"${task.name}" ha finalizado`,
+        title: '⏰ 任务清单',
+        message: `"${task.name}" 计时结束`,
         priority: 2
     });
 

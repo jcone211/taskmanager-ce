@@ -19,10 +19,9 @@
   display: inline-block;
 }
 
-
-/* Establecemos la fuente global */ 
+/* Establecemos la fuente global */
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   background-color: #f4f4f9;
   margin: 0;
   padding: 0;
@@ -30,11 +29,10 @@ body {
   height: 500px;
   box-sizing: border-box;
   color: #333;
-  
+
   overflow-y: auto; /* Permite scroll si el contenido es largo */
   padding-bottom: 30px; /* Espacio inferior */
   min-height: 600px !important; /* Altura mínima suficiente */
-
 }
 
 /* Contenedor principal */
@@ -65,7 +63,8 @@ label {
   color: #4a4a4a;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 12px;
   border-radius: 8px;
@@ -74,7 +73,8 @@ input, select {
   background-color: #f9f9f9;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
   border-color: #007bff;
   outline: none;
   background-color: #fff;
@@ -122,7 +122,7 @@ button[type="submit"]:hover {
   padding: 0 15px; /* Espaciado lateral agregado */
   margin: 15px 0; /* Espaciado superior e inferior ajustado */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 12px;
 }
 
@@ -143,7 +143,6 @@ button[type="submit"]:hover {
   border-left: 4px solid #6c757d !important;
   opacity: 0.8; /* Estado final directamente */
   transition: opacity 0.3s ease; /* Transición suave en lugar de animación */
-
 }
 
 .task-item.completed .task-name {
@@ -164,7 +163,6 @@ button[type="submit"]:hover {
   background-color: #6c757d; /* Sin cambio de color al pasar el cursor */
   transform: none; /* Sin efecto de escala */
 }
-
 
 /* Botones de acción en las tareas */
 .task-actions {
@@ -252,8 +250,6 @@ button i {
   color: green;
 }
 
-
-
 .task-item {
   animation: fadeIn 0.5s ease;
 }
@@ -276,8 +272,7 @@ button i {
   display: block;
 }
 
-.task-item .task-actions{
-
+.task-item .task-actions {
   display: flex;
   justify-content: flex-start; /* Cambiado de flex-end a flex-start */
   gap: 8px;
@@ -288,7 +283,6 @@ button i {
   justify-content: space-between;
   align-items: center;
   justify-content: flex-start; /* Alinea los elementos a la izquierda */
-
 }
 
 .task-item .task-name {
@@ -356,9 +350,8 @@ button i {
 }
 
 .filter-container {
- 
   align-items: center;
- 
+
   background-color: #f1f1f1; /* Fondo opcional para el contenedor */
   padding: 5px 10px; /* Ajuste de relleno */
   border-radius: 5px; /* Bordes redondeados */
@@ -401,10 +394,8 @@ button i {
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
 
-
-
-
-.task-container { /* Contenedor principal de la tarea */
+.task-container {
+  /* Contenedor principal de la tarea */
   display: flex;
   justify-content: flex-start; /* Alinea los elementos a la izquierda */
 }
@@ -548,23 +539,26 @@ button i {
   color: white;
 }
 
-
-
-
 /* Estilo titulo */
 
 .divtitle {
-  background-image: linear-gradient(to right top, #6286bb, #466cb1, #3151a5, #253495, #231182);
+  background-image: linear-gradient(
+    to right top,
+    #6286bb,
+    #466cb1,
+    #3151a5,
+    #253495,
+    #231182
+  );
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 30vh;
-  
+
   font-family: "Poppins", sans-serif;
   font-weight: 900;
 }
-
 
 .key {
   font-size: 6vw;
@@ -572,8 +566,6 @@ button i {
   letter-spacing: -1vw;
   transition: transform 0.2s;
 }
-
-
 
 @keyframes pressDown1 {
   30%,
@@ -663,8 +655,6 @@ button i {
   }
 }
 
-
-
 .key:nth-child(1) {
   animation: pressDown1 2s infinite;
 }
@@ -714,7 +704,7 @@ button i {
 }
 
 /* Colores según la categoría */
-.task-name.urgente{
+.task-name.urgente {
   background-color: #ff4d4d; /* Rojo para "urgente" */
   color: white;
 }
@@ -755,7 +745,6 @@ button i {
   margin: 0;
 }
 
-
 /* Estilos para tareas completadas */
 .task-item.completed {
   background: #f8f9fa !important;
@@ -784,8 +773,6 @@ button i {
   opacity: 1;
 }
 
-
-
 #add-task-form {
   position: fixed;
   top: 50%;
@@ -793,13 +780,13 @@ button i {
   transform: translate(-50%, -50%);
   background: white;
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);  
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   padding: 25px;
   box-sizing: border-box; /* Incluye padding en el ancho */
   z-index: 1000;
-  display: none;  
+  display: none;
   max-width: 360px;
-  width: 95%;  
+  width: 95%;
   transform: translate(-50%, -50%);
   overflow: hidden;
   margin-bottom: 100px;
@@ -864,13 +851,13 @@ button i {
   transform: translateY(-1px);
 }
 
-#close-form {
+/* #close-form {
   position: absolute;
   top: 12px;
   right: 12px;
   background: none;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.8rem;
   color: #666;
   cursor: pointer;
   padding: 4px;
@@ -879,10 +866,10 @@ button i {
 
 #close-form:hover {
   color: #333;
-}
+} */
 
 /* Estilos para el botón "+" */
-.custom-button {
+/* .custom-button {
   background: #007bff;
   color: white;
   border: none;
@@ -897,7 +884,7 @@ button i {
 .custom-button:hover {
   background: #0056b3;
   transform: scale(1.1);
-}
+} */
 
 /* Reglas para el temporizador */
 .task-timer {
@@ -963,8 +950,12 @@ select:focus {
 }
 
 @keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .filters {
@@ -974,7 +965,8 @@ select:focus {
   margin: 15px 0;
 }
 
-.filters select, .filters input {
+.filters select,
+.filters input {
   width: 90%;
   padding: 8px;
   border-radius: 5px;
@@ -1000,8 +992,6 @@ select:focus {
   color: #6c757d;
   font-style: italic;
 }
-
-
 
 .task-header {
   display: flex;
@@ -1069,7 +1059,7 @@ select:focus {
 }
 
 .calendar-day.has-tasks::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 2px;
   right: 2px;
@@ -1078,9 +1068,6 @@ select:focus {
   background: #dc3545;
   border-radius: 50%;
 }
-
-
-
 
 /*Estilos para tareas completadas en el calendario */
 .task-detail.completed {
@@ -1214,11 +1201,12 @@ select:focus {
 
 /* Estilos para el botón de cierre del formulario */
 #close-form {
+  position: absolute;
   top: 10px;
   right: 10px;
   background: none;
   border: none;
-  font-size: 10px;
+  font-size: 14px;
   cursor: pointer;
   color: #000000d1;
   padding: 0 5px;
@@ -1227,7 +1215,7 @@ select:focus {
 
 #close-form:hover {
   transform: scale(1.2);
-  color: #f9f9f90e;
+  color: #939393;
 }
 
 /* Estilos + abrir form */
@@ -1291,7 +1279,7 @@ select:focus {
     align-items: flex-start;
     gap: 10px;
   }
-  
+
   .task-actions {
     align-self: flex-end;
   }
@@ -1337,12 +1325,12 @@ select:focus {
     flex-wrap: wrap;
     gap: 8px;
   }
-  
+
   .task-name {
     max-width: 100%;
     order: 1;
   }
-  
+
   .label {
     order: 2;
     margin-left: 0;
@@ -1371,15 +1359,25 @@ select:focus {
   font-size: 16px;
 }
 
-.urgent { color: #dc3545; }
-.high { color: #ffc107; }
-.low { color: #28a745; }
+.urgent {
+  color: #dc3545;
+}
+.high {
+  color: #ffc107;
+}
+.low {
+  color: #28a745;
+}
 
-#urgent-count { color: #dc3545; }
-#high-count { color: #ffc107; }
-#low-count { color: #28a745; }
-
-
+#urgent-count {
+  color: #dc3545;
+}
+#high-count {
+  color: #ffc107;
+}
+#low-count {
+  color: #28a745;
+}
 
 /* Ajuste para calendario */
 #filter-date {
@@ -1407,30 +1405,42 @@ select:focus {
   }
 }
 
-
 .filter-dropdown input[type="date"] {
   max-width: 100%;
   font-size: 14px;
   padding: 8px 12px !important;
-  width: calc(100% - 33,6px) !important;
+  width: calc(100% - 33, 6px) !important;
   box-sizing: border-box;
 }
 
 /* Colores de categorías */
-.label.danger { background: #ff4444; color: white; }
-.label.warning { background: #ffbb33; color: black; }
-.label.success { background: #00C851; color: white; }
+.label.danger {
+  background: #ff4444;
+  color: white;
+}
+.label.warning {
+  background: #ffbb33;
+  color: black;
+}
+.label.success {
+  background: #00c851;
+  color: white;
+}
 
 /* Colores del calendario */
-.calendar-day.has-tasks { 
+.calendar-day.has-tasks {
   background: #e3f2fd !important;
   position: relative;
 }
-.calendar-day.danger { box-shadow: inset 0 -3px 0 #ff4444; }
-.calendar-day.warning { box-shadow: inset 0 -3px 0 #ffbb33; }
-.calendar-day.success { box-shadow: inset 0 -3px 0 #00C851; }
-
-
+.calendar-day.danger {
+  box-shadow: inset 0 -3px 0 #ff4444;
+}
+.calendar-day.warning {
+  box-shadow: inset 0 -3px 0 #ffbb33;
+}
+.calendar-day.success {
+  box-shadow: inset 0 -3px 0 #00c851;
+}
 
 /* Título del calendario */
 #current-month {
@@ -1449,9 +1459,18 @@ select:focus {
   font-size: 0.85em;
 }
 
-.label.danger { background: #dc3545; color: white; }
-.label.warning { background: #ffc107; color: black; }
-.label.success { background: #28a745; color: white; }
+.label.danger {
+  background: #dc3545;
+  color: white;
+}
+.label.warning {
+  background: #ffc107;
+  color: black;
+}
+.label.success {
+  background: #28a745;
+  color: white;
+}
 
 /* Contador de tareas en días */
 .calendar-day.has-tasks::after {
@@ -1471,8 +1490,9 @@ select:focus {
 }
 
 /* Flechas de navegación */
-#prev-month, #next-month {
-  background: #2196F3;
+#prev-month,
+#next-month {
+  background: #2196f3;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -1481,32 +1501,33 @@ select:focus {
   cursor: pointer;
   transition: background 0.3s;
   border-width: 1px;
-    border-style: solid;
-    border-color: rgb(221, 221, 221);
-    border-image: initial;
-    border-radius: 6px;
+  border-style: solid;
+  border-color: rgb(221, 221, 221);
+  border-image: initial;
+  border-radius: 6px;
 }
 
-#prev-month:hover, #next-month:hover {
+#prev-month:hover,
+#next-month:hover {
   background: #1269b0;
 }
 
 /* Cabecera de días de la semana */
 .calendar-day-header {
-  background: #2196F3;
+  background: #2196f3;
   color: white;
   padding: 12px;
   font-weight: bold;
   border-width: 1px;
-    border-style: solid;
-    border-color: rgb(221, 221, 221);
-    border-image: initial;
-    border-radius: 6px;
+  border-style: solid;
+  border-color: rgb(221, 221, 221);
+  border-image: initial;
+  border-radius: 6px;
 }
 
 /* Días con tareas */
 .calendar-day.has-tasks {
-  background: #FFF3E0;
+  background: #fff3e0;
   position: relative;
 }
 
@@ -1516,7 +1537,7 @@ select:focus {
   position: absolute;
   top: 2px;
   right: 2px;
-  background: #FF5722;
+  background: #ff5722;
   color: white;
   width: 20px;
   height: 20px;
@@ -1556,7 +1577,7 @@ select:focus {
   padding: 10px;
   border-radius: 6px;
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Contenedor flex para título y categoría */
@@ -1583,6 +1604,20 @@ select:focus {
 }
 
 /* Colores de categorías */
-.label.danger { background: #ff4444; color: white; }
-.label.warning { background: #ffbb33; color: white; }
-.label.success { background: #00C851; color: white; }
+.label.danger {
+  background: #ff4444;
+  color: white;
+}
+.label.warning {
+  background: #ffbb33;
+  color: white;
+}
+.label.success {
+  background: #00c851;
+  color: white;
+}
+
+/* 以下为新增css */
+.hide {
+  display: none;
+}
