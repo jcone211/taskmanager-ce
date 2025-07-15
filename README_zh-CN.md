@@ -2,8 +2,9 @@
 
 **[English](README.md) | 简体中文**
 
-原作者：[Oriol Llovera](https://github.com/OriolLlovera/)
-原项目: [OriolLlovera/taskmanager-ce](https://github.com/OriolLlovera/taskmanager-ce.git)
+原作者 ⭐：[Oriol Llovera](https://github.com/OriolLlovera/)
+
+原项目 ⭐: [OriolLlovera/taskmanager-ce](https://github.com/OriolLlovera/taskmanager-ce.git)
 
 ![icon](https://github.com/user-attachments/assets/3c86f31d-1183-470e-b280-409472668bb4)
 
