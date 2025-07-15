@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>任务列表</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- 添加Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <div class="main-container">
+    <div class="divtitle ">
+      <div class="keyboard">
+        <span class="key">T</span>
+        <span class="key">A</span>
+        <span class="key">S</span>
+        <span class="key">K &nbsp;</span>
+        <span class="key">M</span>
+        <span class="key">A</span>
+        <span class="key">N</span>
+        <span class="key">A</span>
+        <span class="key">G</span>
+        <span class="key">E</span>
+        <span class="key">R</span>
+      </div>
+    </div>
+
+
+    <div class="search-container">
+      <!-- 添加按钮 -->
+      <button id="form-icon">+</button>
+
+      <!-- 搜索框 -->
+      <input type="text" id="search-input" placeholder="搜索任务...">
+
+      <!-- 右侧图标容器 -->
+      <div class="actions-container">
+        <!-- 统计 -->
+        <div id="statistics">
+          <span class="stat-item"><i class="fas fa-fire urgent"></i><span id="urgent-count">0</span></span>
+          <span class="stat-item"><i class="fas fa-exclamation-circle high"></i><span id="high-count">0</span></span>
+          <span class="stat-item"><i class="fas fa-leaf low"></i><span id="low-count">0</span></span>
+        </div>
+
+        <!-- 日历按钮 -->
+        <button id="calendar-icon" class="action-btn">
+          <i class="fas fa-calendar-alt"></i>
+        </button>
+
+        <!-- 筛选按钮 -->
+        <div class="filter-wrapper">
+          <button id="filter-icon" class="action-btn">
+            <i class="fas fa-filter"></i>
+          </button>
+          <!-- 下拉菜单 -->
+          <div class="filter-dropdown">
+            <select id="filter-category">
+              <option value="">所有分类</option>
+              <option value="urgente">紧急</option>
+              <option value="alta">高</option>
+              <option value="baja">低</option>
+            </select>
+
+            <select id="filter-status">
+              <option value="">所有状态</option>
+              <option value="completed">已完成</option>
+              <option value="pending">待处理</option>
+            </select>
+
+            <input type="date" id="filter-date">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- 添加任务表单 -->
+  <form id="add-task-form">
+    <button type="button" id="close-form" class="close-btn">×</button>
+    <h2>添加任务</h2>
+
+    <div class="form-group">
+      <label for="task-name">任务名称</label>
+      <input type="text" id="task-name" name="task-name" placeholder="检查文档" required>
+    </div>
+
+    <div class="form-group">
+      <label for="task-category">优先级</label>
+      <select id="task-category" name="task-category" required>
+        <option value="urgente">紧急</option>
+        <option value="alta">高</option>
+        <option value="baja">低</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="task-due-date">截止日期</label>
+      <input type="date" id="task-due-date" name="task-due-date">
+    </div>
+
+    <div class="form-group">
+      <label for="task-description">描述</label>
+      <textarea id="task-description" name="task-description" placeholder="任务详情" rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="task-timer">计时器</label>
+      <select id="task-timer" name="task-timer">
+        <option value="none">无计时器</option>
+        <option value="1min">1分钟</option>
+        <option value="20min">20分钟</option>
+        <option value="30min">30分钟</option>
+        <option value="1h">1小时</option>
+        <option value="2h">2小时</option>
+        <option value="3h">3小时</option>
+      </select>
+    </div>
+
+    <button type="submit" id="submit-form">创建任务</button>
+  </form>
+
+
+
+  <!-- 任务列表 -->
+  <ul id="task-list"></ul>
+
+  <!-- 日历弹窗 -->
+  <div id="calendar-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <div class="calendar-header">
+        <button id="prev-month">&lt;</button>
+        <h3 id="current-month"></h3>
+        <button id="next-month">&gt;</button>
+      </div>
+      <div class="calendar-grid" id="calendar"></div>
+      <div id="task-details"></div>
+    </div>
+  </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
