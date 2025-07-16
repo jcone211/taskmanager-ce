@@ -364,6 +364,15 @@ document.addEventListener('DOMContentLoaded', () => {
       // lastModified: editingTask ? Date.now() : null
     };
 
+    let dueTimestamp;
+    if (taskData.timer && taskData.timer === 'custom' && taskData.customTimer) {
+      const [hours, minutes, seconds] = taskData.customTimer.split(':').map(Number);
+      const totalMilliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
+      const now = new Date();
+      taskData.dueDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() + totalMilliseconds;
+      dueTimestamp = taskData.dueDateTime - now;
+    }
+
     if (editingTask) {
       const index = tasks.findIndex(t => t.id === editingTask.id);
       if (index !== -1) tasks[index] = taskData;
@@ -373,19 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Crear alarma si hay un temporizador activo
       if (taskData.timer && taskData.timer !== 'none') {
-        let dueTimestamp;
-        if (taskData.timer === 'custom') {
-          if (taskData.customTimer) {
-            const [hours, minutes, seconds] = taskData.customTimer.split(':').map(Number);
-            const totalMilliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
-            const now = new Date();
-            taskData.dueDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() + totalMilliseconds;
-            dueTimestamp = taskData.dueDateTime - now;
-          } else {
-            alert('自定义时间未填写');
-            return;
-          }
-        } else {
+        if (taskData.timer !== 'custom') {
           const [value, unit] = taskData.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
           const timeUnits = { min: 60000, h: 3600000 };
           dueTimestamp = value * timeUnits[unit];
