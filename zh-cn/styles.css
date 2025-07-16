@@ -179,7 +179,7 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   display: flex;
-  align-items: left;
+  align-items: center;
   justify-content: center;
   width: 35px;
   height: 35px;
@@ -1030,12 +1030,21 @@ select:focus {
 }
 
 .modal-content {
+  position: relative;
   background: white;
   width: 90%;
   max-width: 600px;
   margin: 2rem auto;
   padding: 20px;
   border-radius: 12px;
+}
+
+.modal-content span {
+  position: absolute;
+  box-sizing: border-box;
+  top: 8px;
+  right: 10px;
+  cursor: pointer;
 }
 .calendar-header {
   display: flex;

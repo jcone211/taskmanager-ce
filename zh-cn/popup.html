@@ -82,7 +82,7 @@
 
   <!-- 添加任务表单 -->
   <form id="add-task-form">
-    <button type="button" id="close-form" class="close-btn">x</button>
+    <button type="button" id="close-form" class="close-btn">&times;</button>
     <h2>添加任务</h2>
 
     <div class="form-group">
@@ -125,12 +125,11 @@
 
     <div class="form-group hide" id="customTimerDiv">
       <label for="task-custom-timer">自定义时间</label>
-      <input type="time" id="task-custom-timer" name="task-custom-timer" step="2">
+      <input type="time" id="task-custom-timer" name="task-custom-timer" step="1">
     </div>
 
     <button type="submit" id="submit-form">创建任务</button>
   </form>
-
 
 
   <!-- 任务列表 -->
@@ -139,7 +138,7 @@
   <!-- 日历弹窗 -->
   <div id="calendar-modal" class="modal">
     <div class="modal-content">
-      <span class="close-modal">&times;</span>
+      <span class="close-modal cl-close-btn">&times;</span>
       <div class="calendar-header">
         <button id="prev-month">&lt;</button>
         <h3 id="current-month"></h3>

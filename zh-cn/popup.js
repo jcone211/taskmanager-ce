@@ -32,19 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     filterDropdown: document.querySelector('.filter-dropdown')
   };
 
-
-  const playAlertSound = () => {
-    chrome.runtime.sendMessage({ type: 'playSound' });
-  };
-
-  /*const showNotification = (taskName) => {
-    chrome.runtime.sendMessage({
-      type: 'showNotification',
-      title: '¡Tiempo agotado!',
-      message: `La tarea "${taskName}" ha expirado`
-    });
-  };*/
-
   const getCategoryClass = (category) => {
     return {
       'urgente': 'danger',
@@ -65,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#add-task-form h2').textContent = isEditing ? '编辑任务' : '添加任务';
     if (!isEditing) {
       elements.addTaskForm.reset();
+      showCustomTimerDiv(false);
       editingTask = null;
     }
   };
@@ -107,7 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="fas fa-edit"></i> 
             ${new Date(task.lastModified).toLocaleDateString('zh-CN')}
           </span>` : ''}
-        ${task.timer !== 'none' ? `<div class="task-timer"><i class="fas fa-hourglass"></i> <span class="countdown" id="countdown-${task.id}"></span></div>` : ''}
+        ${(task.timer !== 'none' && task.timer !== 'custom') ? `<div class="task-timer"><i class="fas fa-hourglass"></i> <span class="countdown" id="countdown-${task.id}"></span></div>` : ''}
+        ${(task.timer === 'custom' && !task.completed) ? `<div class="task-timer"><i class="fas fa-hourglass"></i> <span class="countdown" id="countdown-${task.id}"></span></div>` : ''}
       </div>
       <div class="task-actions">
         <button class="complete-btn" title="${task.completed ? '重新打开' : '完成'}">
@@ -152,20 +141,29 @@ document.addEventListener('DOMContentLoaded', () => {
         countdownIntervals.delete(task.id);
       }
     } else {
-      if (task.timer !== 'none' && task.timer !== 'custom') {
-        const [value, unit] = task.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
-        const timeUnits = { min: 60000, h: 3600000 };
-        task.dueDateTime = Date.now() + (value * timeUnits[unit]);
-
-        // Crear nueva alarma
-        chrome.runtime.sendMessage({
-          type: 'createAlarm',
-          taskId: task.id,
-          dueTime: value * timeUnits[unit]
-        });
-
-        // Reiniciar el temporizador
-        startCountdown(task);
+      if (task.timer && task.timer !== 'none') {
+        let dueTimestamp = null;
+        if (task.timer === 'custom') {
+          const [hours, minutes, seconds] = task.customTimer.split(':').map(Number);
+          const totalMilliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
+          const now = new Date();
+          const beyond = totalMilliseconds >= now.getTime();
+          if (!beyond) {
+            task.dueDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() + totalMilliseconds;
+            dueTimestamp = task.dueDateTime - now;
+          }
+        } else {
+          dueTimestamp = calculateDueDateTime(task.timer);
+          task.dueDateTime = dueTimestamp;
+        }
+        if (dueTimestamp) {
+          chrome.runtime.sendMessage({
+            type: 'createAlarm',
+            taskId: task.id,
+            dueTime: dueTimestamp
+          });
+          startCountdown(task);
+        }
       }
     }
 
@@ -223,9 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 🔥 Crear alarma para disparar notificación
         chrome.runtime.sendMessage({
-          type: 'createAlarm',
-          taskId: task.id,
-          dueTime: 0 // Disparar inmediatamente
+          type: 'deleteAlarm',
+          taskId: task.id
         });
 
         clearInterval(countdownIntervals.get(task.id));
@@ -364,29 +361,32 @@ document.addEventListener('DOMContentLoaded', () => {
       // lastModified: editingTask ? Date.now() : null
     };
 
-    let dueTimestamp;
+    let dueTimestamp = null;
     if (taskData.timer && taskData.timer === 'custom' && taskData.customTimer) {
       const [hours, minutes, seconds] = taskData.customTimer.split(':').map(Number);
       const totalMilliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
       const now = new Date();
-      taskData.dueDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() + totalMilliseconds;
-      dueTimestamp = taskData.dueDateTime - now;
+      const beyond = totalMilliseconds >= now.getTime();
+      if (!beyond) {
+        taskData.dueDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() + totalMilliseconds;
+        dueTimestamp = taskData.dueDateTime - now;
+      }
     }
 
     if (editingTask) {
       const index = tasks.findIndex(t => t.id === editingTask.id);
       if (index !== -1) tasks[index] = taskData;
       editingTask = null;
+      chrome.runtime.sendMessage({ type: 'deleteAlarm' });
     } else {
       tasks.push(taskData);
+    }
 
-      // Crear alarma si hay un temporizador activo
-      if (taskData.timer && taskData.timer !== 'none') {
-        if (taskData.timer !== 'custom') {
-          const [value, unit] = taskData.timer.match(/(\d+)(min|h)/i)?.slice(1) || [];
-          const timeUnits = { min: 60000, h: 3600000 };
-          dueTimestamp = value * timeUnits[unit];
-        }
+    if (taskData.timer && taskData.timer !== 'none') {
+      if (taskData.timer !== 'custom') {
+        dueTimestamp = calculateDueDateTime(taskData.timer);
+      }
+      if (dueTimestamp) {
         chrome.runtime.sendMessage({
           type: 'createAlarm',
           taskId: taskData.id,
@@ -468,36 +468,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   chrome.storage.local.get(['tasks'], (result) => {
     tasks = result.tasks || [];
+    let refreshFlag = false;
+    tasks.forEach(task => {
+      if (!task.completed && task.dueDateTime > Date.now()) {
+        startCountdown(task);
+      }
+      if (!task.completed && task.dueDateTime < Date.now()) {
+        task.completed = true;
+        refreshFlag = true;
+      }
+    });
+    if (refreshFlag) {
+      saveTasks();
+    }
     renderTasks();
     updateStatistics();
-    tasks.forEach(task => {
-      if (!task.completed && task.dueDateTime > Date.now()) startCountdown(task);
-    });
   });
-
-
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message.type === 'alarmTriggered') {
-      // Actualizar el estado de la tarea
-      tasks = tasks.map(task =>
-        task.id === message.taskName ? { ...task, completed: true } : task
-      );
-
-      saveTasks(); // Guardar los cambios
-      renderTasks();
-      updateStatistics();
-      //showNotification(message.taskName);
-      playAlertSound();
-
-      // Eliminar la alarma
-      chrome.runtime.sendMessage({
-        type: 'deleteAlarm',
-        taskId: message.taskName
-      });
-    }
-  });
-
-
-
-
 });
