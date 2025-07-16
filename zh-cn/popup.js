@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const editTask = (task) => {
     editingTask = task;
+    showCustomTimerDiv(task.timer);
     populateForm(task);
     toggleForm(true);
   };
@@ -328,6 +329,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const showCustomTimerDiv = (timer) => {
+    if (timer === 'custom') {
+      elements.customTimer.setAttribute('required', '');
+      elements.customTimerDiv.classList.remove('hide');
+    } else {
+      elements.customTimer.removeAttribute('required');
+      elements.customTimerDiv.classList.add('hide');
+    }
+  }
+
   elements.formIcon.addEventListener('click', () => toggleForm());
   elements.closeForm.addEventListener('click', () => toggleForm(false));
 
@@ -395,13 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //监听定时器值改变事件，弹出自定义时间选择
   elements.taskTimer.addEventListener('change', (e) => {
-    if (e.target.value === 'custom') {
-      elements.customTimer.setAttribute('required', '');
-      elements.customTimerDiv.classList.remove('hide');
-    } else {
-      elements.customTimer.removeAttribute('required');
-      elements.customTimerDiv.classList.add('hide');
-    }
+    showCustomTimerDiv(e.target.value);
   });
 
   elements.filterWrapper.addEventListener('click', (e) => {
