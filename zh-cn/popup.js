@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     taskTimer: document.getElementById('task-timer'),
     customTimerDiv: document.getElementById('customTimerDiv'),
     customTimer: document.getElementById('task-custom-timer'),
+    dailyTaskDiv: document.getElementById('dailyTaskDiv'),
     submitForm: document.getElementById('submit-form'),
     searchInput: document.getElementById('search-input'),
     taskList: document.getElementById('task-list'),
@@ -65,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form['task-description'].value = task.description || '';
     form['task-timer'].value = task.timer || 'none';
     form['task-custom-timer'].value = task.customTimer || '';
+    [...form['daily-task']].forEach(input => input.checked = input.value === String(task.dailyTask));
   };
 
   const calculateDueDateTime = (timer) => {
@@ -82,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     taskElement.innerHTML = `
   <div class="task-content">
     <div class="task-header-container">
-      <h3 class="task-name">${task.name}</h3>
+      <h3 class="task-name">${task.dailyTask ? "[每日] " + task.name : task.name}</h3>
       <span class="label ${getCategoryClass(task.category)}">${categoryEnum[task.category]}</span>
     </div>
     ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
@@ -127,15 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveTasks = () => chrome.storage.local.set({ tasks });
 
   const toggleComplete = (task) => {
-    const wasCompleted = task.completed;
     task.completed = !task.completed;
-    // task.lastModified = Date.now();
 
     if (task.completed) {
-      // Eliminar la alarma
+      task.lastCompleted = Date.now();
       chrome.runtime.sendMessage({ type: 'deleteAlarm', taskId: task.id });
-
-      // Detener el temporizador
       if (countdownIntervals.has(task.id)) {
         clearInterval(countdownIntervals.get(task.id));
         countdownIntervals.delete(task.id);
@@ -327,12 +325,20 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const showCustomTimerDiv = (timer) => {
-    if (timer === 'custom') {
+    if (!timer || timer === 'none') {
+      elements.customTimer.removeAttribute('required');
+      elements.customTimerDiv.classList.add('hide');
+      elements.dailyTaskDiv.classList.remove('hide');
+    } else if (timer === 'custom') {
       elements.customTimer.setAttribute('required', '');
       elements.customTimerDiv.classList.remove('hide');
+      elements.dailyTaskDiv.classList.add('hide');
+      document.querySelector('input[name="daily-task"][value="false"]').checked = true;
     } else {
       elements.customTimer.removeAttribute('required');
       elements.customTimerDiv.classList.add('hide');
+      elements.dailyTaskDiv.classList.add('hide');
+      document.querySelector('input[name="daily-task"][value="false"]').checked = true;
     }
   }
 
@@ -358,6 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
       completed: editingTask?.completed || false,
       creationDate: editingTask?.creationDate || Date.now(),
       lastModified: null,
+      lastCompleted: editingTask?.lastCompleted || false,  //用于每日执行任务判断当日是否执行
+      dailyTask: document.querySelector('input[name="daily-task"]:checked')?.value === 'true',
       // lastModified: editingTask ? Date.now() : null
     };
 
@@ -466,22 +474,53 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
-  chrome.storage.local.get(['tasks'], (result) => {
-    tasks = result.tasks || [];
-    let refreshFlag = false;
-    tasks.forEach(task => {
-      if (!task.completed && task.dueDateTime > Date.now()) {
-        startCountdown(task);
+  const refreshTasksStorage = () => {
+    const now = new Date();
+    chrome.storage.local.get(['tasks'], (result) => {
+      tasks = result.tasks || [];
+      let refreshFlag = false;
+      tasks.forEach(task => {
+        if (!task.completed && task.dueDateTime > Date.now()) {
+          startCountdown(task);
+        }
+        if (!task.completed && task.dueDateTime < Date.now()) {
+          task.completed = true;
+          refreshFlag = true;
+        }
+        if (task.dailyTask && task.completed) {
+          //判断今日是否完成
+          const todayCompleted = task.lastCompleted > new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+          if (!todayCompleted) {
+            //判断是否已截止
+            if (task.dueDate) {
+              const beyond = (new Date(task.dueDate) + 86400000) < Date.now();
+              if (!beyond) {
+                task.completed = false;
+                refreshFlag = true;
+              }
+            } else {
+              task.completed = false;
+              refreshFlag = true;
+            }
+          }
+        }
+      });
+      // 创建每日任务提醒
+      const dailyTaskNotCompleted = tasks.filter(task => task.dailyTask && !task.completed).length;
+      if (dailyTaskNotCompleted > 0) {
+        chrome.runtime.sendMessage({
+          type: 'createAlarm',
+          taskId: `daily-${new Date().toISOString().split('T')[0]}`,
+          dueTime: 72000000 - (Date.now() - new Date().setHours(0, 0, 0, 0)),
+        });
       }
-      if (!task.completed && task.dueDateTime < Date.now()) {
-        task.completed = true;
-        refreshFlag = true;
+      if (refreshFlag) {
+        saveTasks();
       }
+      renderTasks();
+      updateStatistics();
     });
-    if (refreshFlag) {
-      saveTasks();
-    }
-    renderTasks();
-    updateStatistics();
-  });
+  };
+  refreshTasksStorage();
+
 });

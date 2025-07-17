@@ -24,9 +24,27 @@ const initializeOffscreen = async () => {
 // Escuchar todas las alarmas
 chrome.alarms.onAlarm.addListener(async (alarm) => {
     await initializeOffscreen();
+    const { tasks = [] } = await chrome.storage.local.get('tasks');
+
+    if (alarm.name.startsWith('daily-')) {
+        const dailyTaskNotCompleted = tasks.filter(task => !task.completed).length;
+        if (dailyTaskNotCompleted > 0) {
+            chrome.runtime.sendMessage({
+                type: 'playSound'
+            });
+            chrome.notifications.create(alarm.name, {
+                type: 'basic',
+                iconUrl: 'icon.png',
+                title: '⏰ 任务清单',
+                message: `每日任务提醒：${dailyTaskNotCompleted} 个未完成的任务 `,
+                priority: 2
+            });
+        }
+        return;
+    }
 
     // Obtener las tareas almacenadas localmente
-    const { tasks = [] } = await chrome.storage.local.get('tasks');
+
     const taskIndex = tasks.findIndex(t => t.id === alarm.name);
 
     if (taskIndex === -1) {

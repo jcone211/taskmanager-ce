@@ -7,7 +7,7 @@
   <title>任务列表</title>
   <link rel="stylesheet" href="styles.css">
   <!-- 添加Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
 
 </head>
 
@@ -45,38 +45,36 @@
           <span class="stat-item"><i class="fas fa-exclamation-circle high"></i><span id="high-count">0</span></span>
           <span class="stat-item"><i class="fas fa-leaf low"></i><span id="low-count">0</span></span>
         </div>
+      </div>
+      <!-- 日历按钮 -->
+      <button id="calendar-icon" class="action-btn">
+        <i class="fas fa-calendar-alt"></i>
+      </button>
 
-        <!-- 日历按钮 -->
-        <button id="calendar-icon" class="action-btn">
-          <i class="fas fa-calendar-alt"></i>
+      <!-- 筛选按钮 -->
+      <div class="filter-wrapper">
+        <button id="filter-icon" class="action-btn">
+          <i class="fas fa-filter"></i>
         </button>
+        <!-- 下拉菜单 -->
+        <div class="filter-dropdown">
+          <select id="filter-category">
+            <option value="">所有分类</option>
+            <option value="urgente">紧急</option>
+            <option value="alta">高</option>
+            <option value="baja">低</option>
+          </select>
 
-        <!-- 筛选按钮 -->
-        <div class="filter-wrapper">
-          <button id="filter-icon" class="action-btn">
-            <i class="fas fa-filter"></i>
-          </button>
-          <!-- 下拉菜单 -->
-          <div class="filter-dropdown">
-            <select id="filter-category">
-              <option value="">所有分类</option>
-              <option value="urgente">紧急</option>
-              <option value="alta">高</option>
-              <option value="baja">低</option>
-            </select>
+          <select id="filter-status">
+            <option value="">所有状态</option>
+            <option value="completed">已完成</option>
+            <option value="pending">待处理</option>
+          </select>
 
-            <select id="filter-status">
-              <option value="">所有状态</option>
-              <option value="completed">已完成</option>
-              <option value="pending">待处理</option>
-            </select>
-
-            <input type="date" id="filter-date">
-          </div>
+          <input type="date" id="filter-date">
         </div>
       </div>
     </div>
-
 
   </div>
 
@@ -126,6 +124,22 @@
     <div class="form-group hide" id="customTimerDiv">
       <label for="task-custom-timer">自定义时间</label>
       <input type="time" id="task-custom-timer" name="task-custom-timer" step="1">
+    </div>
+
+    <div class="form-group" id="dailyTaskDiv">
+      <label for="daily-task">每日执行</label>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="daily-task" value="true">
+          <span class="custom-radio"></span>
+          是
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="daily-task" value="false" checked>
+          <span class="custom-radio"></span>
+          否
+        </label>
+      </div>
     </div>
 
     <button type="submit" id="submit-form">创建任务</button>

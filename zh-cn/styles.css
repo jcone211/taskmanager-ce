@@ -25,14 +25,14 @@ body {
   background-color: #f4f4f9;
   margin: 0;
   padding: 0;
-  width: 600px;
-  height: 500px;
+  width: 450px;
+  height: 300px;
   box-sizing: border-box;
   color: #333;
 
   overflow-y: auto; /* Permite scroll si el contenido es largo */
   padding-bottom: 30px; /* Espacio inferior */
-  min-height: 600px !important; /* Altura mínima suficiente */
+  min-height: 500px !important; /* Altura mínima suficiente */
 }
 
 /* Contenedor principal */
@@ -181,14 +181,19 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
+  margin-top: 16px;
 }
 
 /* Estilo de los iconos */
 button i {
-  font-size: 16px;
+  font-size: 14px;
   color: white;
+}
+
+.fa-undo {
+  cursor: pointer;
 }
 
 /* Botón completar */
@@ -339,7 +344,7 @@ button i {
 }
 .search-container {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   gap: 10px;
   margin-bottom: 1.5rem;
   position: relative;
@@ -410,15 +415,23 @@ button i {
   padding-left: 10px;
 }
 
-.actions-container::before {
+.actions-container::before,
+.actions-container::after {
   content: "";
   position: absolute;
-  left: 0;
   top: 50%;
   transform: translateY(-50%);
   height: 70%;
   width: 1px;
   background: #e4e6eb;
+}
+
+.actions-container::before {
+  left: 0;
+}
+
+.actions-container::after {
+  right: 0;
 }
 
 /* Botones de acción */
@@ -431,9 +444,6 @@ button i {
   color: #606770;
   cursor: pointer;
   transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .action-btn:hover {
@@ -886,12 +896,6 @@ button i {
   transform: scale(1.1);
 } */
 
-/* Reglas para el temporizador */
-.task-timer {
-  margin-top: 10px;
-  font-size: 0.9em;
-}
-
 .countdown {
   font-weight: bold;
   color: #28a745;
@@ -1262,14 +1266,14 @@ select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
+  /* margin-top: 10px; */
   width: 100%;
 }
 
 .task-meta {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   font-size: 0.85em;
   color: #666;
 }
@@ -1282,7 +1286,7 @@ select:focus {
 }
 
 /* Ajustes para responsividad */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .task-footer-container {
     flex-direction: column;
     align-items: flex-start;
@@ -1292,11 +1296,10 @@ select:focus {
   .task-actions {
     align-self: flex-end;
   }
-}
+} */
 
 /* Mantener alineación de elementos temporales */
 .task-timer {
-  margin-top: 10px;
   font-size: 0.85em;
   color: #666;
 }
@@ -1629,4 +1632,53 @@ select:focus {
 /* 以下为新增css */
 .hide {
   display: none;
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+  font-family: sans-serif;
+}
+
+.radio-option {
+  position: relative;
+  padding-left: 28px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  user-select: none;
+}
+
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.custom-radio {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  height: 18px;
+  width: 18px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.radio-option input[type="radio"]:checked + .custom-radio {
+  border-color: #007bff;
+  background-color: #007bff;
+}
+
+.radio-option input[type="radio"]:checked + .custom-radio::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
