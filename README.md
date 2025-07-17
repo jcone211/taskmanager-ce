@@ -21,7 +21,7 @@ Task Manager es una extensión de Google Chrome diseñada para ayudarte a organi
 
 1. Sinicization of Chinese.
 2. Add a custom task time selection.
-3. Added daily fixed mission feature.
+3. Add daily fixed mission feature.
 4. Modify some CSS styles.
 5. ...
 
