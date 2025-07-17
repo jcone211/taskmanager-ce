@@ -1039,7 +1039,7 @@ select:focus {
   border-radius: 12px;
 }
 
-.modal-content span {
+.modal-content > span {
   position: absolute;
   box-sizing: border-box;
   top: 8px;
