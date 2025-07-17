@@ -15,7 +15,7 @@ Task Manager es una extensión de Google Chrome diseñada para ayudarte a organi
 - 🎨 Interfaz simple y amigable.
 - 🌙 Calendario de tareas.
 
-## ✨ 较原项目修改项
+## ✨ Modified items from the original project
 
 (The original version has not been modified.Please use zh-CN version)
 
